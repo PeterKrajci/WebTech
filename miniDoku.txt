@@ -1,0 +1,85 @@
+Routy:
+	Ingredietnts:
+		router.get('/', services.ingredient.getAllIngredients) -- Vrati vsetky ingrediencie
+		router.get('/:id', param('id').isInt(), services.ingredient.getFilteredIngredient) -- Vrati ingredienciu podla ID (ID == parameter v url) 	
+		router.post('/addIngredient', services.ingredient.addIngredient) -- Prida ingredienciu
+			Pridanie ingrediencie (JSON format):
+				{
+				    "title": "surovina",
+    				    "unit": "jednotka"
+				}
+		router.put('/editIngredient', services.ingredient.editIngredient) -- Upravi ingredienciu
+			Upravenie ingrediencie:
+				{
+    				   "ingredient":{
+        			      "id": 5,
+        			      "title": "zmenaa",
+        			      "unit": "lbs"
+    				   }
+				}
+		router.delete('/removeIngredient/:id', param('id').isInt(), services.ingredient.removeIngredient) -- Odstrani ingredienciu podľa ID (ID == parameter v url) z tabulky ingredients + 
+														     odstrani vsetky riadky tabulky recipeIngredients, kde sa vyskytuje ID tejto 
+														     ingrediencie
+
+	Recipes:
+		router.get('/', services.recipe.getAllRecipes) -- Vrati vsetky recepty
+		router.get('/:title', param('title').isLength({min:2, max:50}), services.recipe.getFilteredRecipes) -- Vrati recept podla ID (ID == parameter v url) 
+		router.post('/addRecipe', services.recipe.addRecipe) -- Prida recept aj s ingredienciami. Predpokladá sa, že pole ingredientsId obsahuje existujúce id-cka ingrediencii.
+			Pridanie noveho receptu
+				{
+    				   "recipe":{
+        			      "title":"some food",
+        			      "text":"do something",
+        			      "rating": 5
+    				   },
+    				   "ingredientsId":[1,2,3,4]
+				}
+
+		router.delete('/removeRecipe/:id',param('id').isInt(), services.recipe.removeRecipe) - Odstrani recept 
+		router.put('/updateRecipe', services.recipe.updateRecipe) -- Upravi recept v databaze. Predpokladá sa, že pole ingredientsId obsahuje existujúce id-cka ingrediencii.
+				{
+				   "recipe":{
+				      "id":1,
+      				      "title":"some food",
+      				      "text":"do something"
+   				   },
+   				   "ingredientsId":[1,2,3,4]
+				}
+		router.put('/editRating', services.recipe.editRating) -- Upravi rating receptu. Min:1, Max:5
+			Upravenie/zmena ratingu receptu 
+				{
+   				   "recipe":{
+      				      "id": 1,
+      				      "rating": 1
+   				   }
+				}
+
+	Categories:
+		router.get('/', services.category.getAllCategories) -- Vrati vsetky kategorie
+		router.get('/:id', param('id').isInt(), services.ingredient.getFilteredIngredient) -- Vrati kategoriu podla ID (ID == parameter v url) 
+		router.post('/addCategory', services.category.addCategory) -- Prida kategoriu
+			Pridanie novej kategorie
+				{
+    				   "title":"dalsiaKategoria",
+    				   "text":"popis kategorie"
+				}
+		router.put('/editCategory', services.category.editCategory) -- Upravi kategoriu
+			Upravenie kategórie:
+				{
+				   "category":{
+				      "id":1,
+      				      "title":"newCategory",
+      				      "text":"another description"
+   				   }
+				}
+		router.put('/addCatToRec', services.category.addCategoriesToRecipe) -- Prida kategorie ku konkretnemu receptu. Predpokladá sa, že pole categoriesId obsahuje existujúce id-cka kategorii.
+			Pridanie kategórie k receptu
+				{
+   				   "recipe":{
+      				      "id": 1
+   				   },
+   				   "categoriesId":[1,2,3]
+				}
+		router.delete('/removeCategory/:id', param('id').isInt(), services.category.removeCategory) --  Odstrani kategóriu podľa ID (ID == parameter v url) z tabulky categories + 
+														odstrani vsetky riadky tabulky recipeCategory, kde sa vyskytuje ID tejto 
+														kategorie
